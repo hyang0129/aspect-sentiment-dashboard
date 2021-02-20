@@ -2,33 +2,41 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from compress_pickle import dump
 
-root = BeautifulSoup(open(r'C:\Users\HongM\PycharmProjects\aspect-sentiment-dashboard\text_data\mams-asca-train.xml'))
+def process_mams(xml_path, output_path = None):
 
-categories = []
+    # root = BeautifulSoup(open(r'C:\Users\HongM\PycharmProjects\aspect-sentiment-dashboard\text_data\mams-asca-train.xml'))
 
-for ac in root.find_all('aspectcategory'):
+    root = BeautifulSoup(
+        open(xml_path))
 
-    categories.append(ac['category'])
+    categories = []
 
-set_of_categories = set(categories)
+    for ac in root.find_all('aspectcategory'):
 
-print(set_of_categories)
+        categories.append(ac['category'])
 
-examples = []
+    set_of_categories = set(categories)
 
-for sentence in tqdm(root.find_all('sentence')):
+    print(set_of_categories)
 
-    example = {}
+    examples = []
 
-    example['text'] = sentence.text.replace('\n', '')
+    for sentence in tqdm(root.find_all('sentence')):
 
-    aspects = {k: 'none' for k in set_of_categories}
+        example = {}
 
-    for cat in sentence.find_all('aspectcategory'):
-        aspects[cat.get('category')] = cat.get('polarity')
+        example['text'] = sentence.text.replace('\n', '')
 
-    example['aspects'] = aspects
+        aspects = {k: 'none' for k in set_of_categories}
 
-    examples.append(example)
+        for cat in sentence.find_all('aspectcategory'):
+            aspects[cat.get('category')] = cat.get('polarity')
 
-dump(examples, '../text_data/mams-asca-train.gz')
+        example['aspects'] = aspects
+
+        examples.append(example)
+
+    if output_path is not None:
+        dump(examples, output_path)
+    return examples
+
