@@ -1,2 +1,5 @@
 tensorflow==2.4.0
 transformers
+beautifulsoup4
+compress_pickle
+tqdm
