@@ -3,3 +3,7 @@ transformers
 beautifulsoup4
 compress_pickle
 tqdm
+sklearn
+pandas
+tensorflow_addons
+matplotlib
