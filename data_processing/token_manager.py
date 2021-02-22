@@ -1,5 +1,5 @@
 from transformers import AutoTokenizer
-import tqdm
+from tqdm import tqdm
 import tensorflow as tf
 
 class Token_Manager:
@@ -7,7 +7,6 @@ class Token_Manager:
     def __init__(self, P):
 
         self.tokenizer = AutoTokenizer.from_pretrained(P.model_name)
-
 
 
     @staticmethod
