@@ -7,3 +7,4 @@ sklearn
 pandas
 tensorflow_addons
 matplotlib
+lxml

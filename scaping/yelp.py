@@ -19,3 +19,7 @@ def get_reviews(URL):
 
 
     return reviews
+
+URL = "https://www.yelp.ca/biz/banh-mi-boys-toronto"
+
+print(get_reviews(URL))
