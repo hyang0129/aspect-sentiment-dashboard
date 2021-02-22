@@ -25,7 +25,7 @@ class Token_Manager:
         return example
 
 
-    def encode_to_tokens(self, example):
+    def encode_to_tokens(self, example, decoder = True):
         try:
             example['question_and_context']
         except:
@@ -35,19 +35,27 @@ class Token_Manager:
                                    return_tensors='tf', max_length=self.P.encoder_max_len,
                                    pad_to_max_length=True)
 
-        decoder_inputs = self.tokenizer(example['answer'], truncation=True,
-                                   return_tensors='tf', max_length=self.P.decoder_max_len,
-                                   pad_to_max_length=True)
-
         input_ids = encoder_inputs['input_ids'][0]
         input_attention = encoder_inputs['attention_mask'][0]
-        target_ids = decoder_inputs['input_ids'][0]
-        target_attention = decoder_inputs['attention_mask'][0]
+
+        if decoder:
+            decoder_inputs = self.tokenizer(example['answer'], truncation=True,
+                                       return_tensors='tf', max_length=self.P.decoder_max_len,
+                                       pad_to_max_length=True)
+
+            target_ids = decoder_inputs['input_ids'][0]
+            target_attention = decoder_inputs['attention_mask'][0]
+
+        else:
+            target_ids = tf.zeros((1,))
+            target_attention = tf.zeros((1,))
 
         return {'input_ids': input_ids,
                 'attention_mask': input_attention,
                 'labels': target_ids,
                 'decoder_attention_mask': target_attention}
+
+
 
 
     def tokenize_dataset(self, examples):
@@ -66,7 +74,7 @@ class Token_Manager:
         for k, v in tokenized_dataset.items():
             tokenized_dataset[k] = tf.stack(v, axis=0)
 
-        self.tokenize_dataset = tokenized_dataset
+        self.tokenized_dataset = tokenized_dataset
         return tokenized_dataset
 
     @staticmethod

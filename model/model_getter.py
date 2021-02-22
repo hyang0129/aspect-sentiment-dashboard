@@ -22,3 +22,19 @@ def get_model(strategy=None,
         model.compile(optimizer=optimizer, metrics=metrics)
 
     return model
+
+
+def load_pretrained_model(model_fn =SnapthatT5.from_pretrained,
+                          P = None,
+                          weight_path = None
+                          ):
+
+    if weight_path is None:
+        weight_path = P.weight_path
+
+    model = model_fn(P.model_name)
+    model.load_weights(weight_path)
+
+    return model
+
+
