@@ -7,7 +7,7 @@ class Token_Manager:
     def __init__(self, P):
 
         self.tokenizer = AutoTokenizer.from_pretrained(P.model_name)
-
+        self.P = P
 
     @staticmethod
     def to_question_answer(example):
