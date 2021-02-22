@@ -25,14 +25,7 @@ class Token_Manager:
         return example
 
 
-    def encode_to_tokens(self, example, decoder = True, compose_qa_fn = None):
-        try:
-            example['question_and_context']
-        except:
-            if compose_qa_fn is None:
-                example = self.to_question_answer(example)
-            else:
-                example = compose_qa_fn(example)
+    def encode_to_tokens(self, example, decoder = True):
 
         encoder_inputs = self.tokenizer(example['question_and_context'], truncation=True,
                                    return_tensors='tf', max_length=self.P.encoder_max_len,
@@ -68,8 +61,14 @@ class Token_Manager:
                              'attention_mask': [],
                              'decoder_attention_mask': []}
 
+        if compose_qa_fn is not None:
+            examples = [compose_qa_fn(example) for example in examples]
+        else:
+            examples = [self.to_question_answer(example) for example in examples]
+
+
         for example in tqdm(examples):
-            values = self.encode_to_tokens(example, compose_qa_fn)
+            values = self.encode_to_tokens(example)
 
             for i, k in enumerate(tokenized_dataset.keys()):
                 tokenized_dataset[k].append(values[k])
@@ -78,7 +77,7 @@ class Token_Manager:
             tokenized_dataset[k] = tf.stack(v, axis=0)
 
         self.tokenized_dataset = tokenized_dataset
-        return tokenized_dataset
+        return tokenized_dataset, examples
 
     @staticmethod
     def _to_x_none(example):
