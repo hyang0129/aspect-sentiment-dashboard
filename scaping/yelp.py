@@ -11,6 +11,11 @@ def get_reviews(URL):
     text = text.replace('&amp' , '&')
     text = text.replace('&apos;', "'")
 
+    d = eval(text)
     reviews = d['review']
+
+    for review in reviews:
+        review['text'] = review['description']
+
 
     return reviews
