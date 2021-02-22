@@ -4,8 +4,6 @@ from compress_pickle import dump
 
 def process_mams(xml_path, output_path = None):
 
-    # root = BeautifulSoup(open(r'C:\Users\HongM\PycharmProjects\aspect-sentiment-dashboard\text_data\mams-asca-train.xml'))
-
     root = BeautifulSoup(
         open(xml_path))
 
